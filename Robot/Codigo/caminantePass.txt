@@ -1,0 +1,7 @@
+{
+    "fin_x": 35,
+    "fin_y": 50,
+    "orientacion": "E",
+    "pos_x": 34,
+    "pos_y": 50
+}
