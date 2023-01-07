@@ -1,4 +1,4 @@
-# Robot
+# Simulador Physarum Polycephalum
 ## Contenido:
 * Todo el simulador del modelado del Physarum Polycephalum, trabajando actualmente con la vecindad de Moore y de Von Neumann.
 ## Mas información:
