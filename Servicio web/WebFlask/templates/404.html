@@ -1,0 +1,27 @@
+{% extends "Base_Home.html" %}
+{% block title %}Error{% endblock %}
+
+
+{% block content %}
+<div class="container">
+	<div class="section">
+		<div class="column has-text-centered">
+			<h1 class="title" style="color: ghostwhite;">404 - Not Found</h1><br>
+		</div>
+		<div class="card">
+			<div class="card-image">
+				<figure class="image is-3by1">
+					<img src="{{ url_for('static',filename='img/error.gif')}}" alt="this slowpoke moves"
+						width="250" />
+
+				</figure>
+			</div>
+			<div class="card-content">
+				<div class="content">
+					Lo sentimos esta url no existe, regrese hacia atras.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

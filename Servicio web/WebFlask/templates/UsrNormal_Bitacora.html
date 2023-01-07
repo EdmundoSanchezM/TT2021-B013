@@ -1,0 +1,39 @@
+{% extends "Base_UsrNormal.html" %}
+{% block title %}Bitácora del sistema{% endblock %}
+
+{% block contenido %}
+<!-- CONTENIDO -->    
+<div class="container">
+    <div class="section">
+        <div class="column has-text-centered">
+            <h1 class="title">Bitácora del sistema</h1>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th data-field="Usuario">Número de registro</th>
+                    <th data-field="Actividad">Actividad</th>
+                    <th data-field="Email Responsable">Email Responsable</th>
+                    <th data-field="Email afectado">Email del afectado</th>
+                    <th data-field="Fecha">Fecha y hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if filas != None %}
+                {% for fila in tablita %}
+                <tr>
+                    <td>{{fila[0]}}</td>
+                    <td>{{fila[1]}}</td>
+                    <td>{{fila[2]}}</td>
+                    <td>{{fila[3]}}</td>
+                    <td>{{fila[4]}}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>   
+<!-- CONTENIDO -->
+
+{% endblock %}

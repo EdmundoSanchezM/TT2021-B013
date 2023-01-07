@@ -1,0 +1,178 @@
+{% extends "Base_Home.html" %}
+{% block title %}Registro{% endblock %}
+
+{% block content %}
+<!-- Sweet Alert CSS -->
+<link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+<!-- Sweet Alert JS -->
+<script src="{{ url_for('static',filename='js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+
+<script>
+    var pwMatch = false;
+    function validateNumbers(evt) {
+        var theEvent = evt || window.event;
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+            // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
+    function matchPassword() {
+        var pw1 = document.getElementById("contra").value;
+        var pw2 = document.getElementById("contra2").value;
+        if (pw2.length > 0) {
+            if (pw1 == pw2) {
+                document.getElementById("contraok").style.display = 'block';
+                document.getElementById("contraokn").style.display = 'none';
+                pwMatch = true;
+            } else {
+                document.getElementById("contraokn").style.display = 'block';
+                document.getElementById("contraok").style.display = 'none';
+                pwMatch = false;
+            }
+        }
+
+    }
+    function traeValores(formulario) {
+        if (!pwMatch) {
+            Swal.fire({
+                title: "Cuidado!",
+                text: "Las contraseñas no coinciden",
+                confirmButtonText: 'Ok',
+                icon: "warning"
+            })
+            return false;
+        }
+        var dataDic = {
+            nombre: formulario.nombre.value,
+            appaterno: formulario.appaterno.value,
+            apmaterno: formulario.apmaterno.value,
+            cel: formulario.cel.value,
+            contra: formulario.contra.value,
+            email: formulario.email.value,
+        }
+        var data = JSON.stringify(dataDic, null, 2)
+        var http = new XMLHttpRequest();
+        var url = '/signup';
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/json');
+        http.responseType = "json";
+        http.onreadystatechange = function () {
+            if (this.readyState == 4 && this.response[1] == 200) {
+                Swal.fire({
+                    title: "Bien",
+                    text: this.response[0]["mensaje"],
+                    confirmButtonText: 'Iniciar sesión',
+                    icon: "success"
+                }).then((result) => {
+                    location.href = "/login";
+                })
+            } else if (this.response[1] == 409) {
+                Swal.fire({
+                    text: this.response[0]["mensaje"],
+                    confirmButtonText: 'Ok',
+                    icon: "warning"
+                }).then((result) => {
+                    location.href = "/signup";
+                })
+            } else if (this.response[1] == 500) {
+                Swal.fire({
+                    title: "Error",
+                    text: this.response[0]["mensaje"],
+                    confirmButtonText: 'Ok',
+                    icon: "error"
+                }).then((result) => {
+                    location.href = "/signup";
+                })
+            }
+        };
+        http.send(data);
+        return false
+    }
+</script>
+<div class="container">
+    <div class="section">
+        <div class="column has-text-centered">
+            <h1 class="title" style="color: ghostwhite;">Registro</h1>
+        </div>
+        <div class="content">
+            <form id="registrarUsuario" method="POST"
+                onsubmit="return traeValores(document.getElementById('registrarUsuario'))">
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label" style="color: rgb(185, 185, 185);">Nombre(s)</label>
+                            <input class="input" id="nombre" type="text" placeholder="Nombre(s)" required>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label" style="color: rgb(185, 185, 185);">Apellido Paterno</label>
+                            <input class="input" id="appaterno" type="text" placeholder="Apellido Paterno" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label" style="color: rgb(185, 185, 185);">Apellido Materno</label>
+                            <input class="input" id="apmaterno" type="text" placeholder="Apellido Materno" required>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label" style="color: rgb(185, 185, 185);">Numero de celular</label>
+                            <input class="input" id="cel" onkeypress='validateNumbers(event)' type="text" minlength="10"
+                                maxlength="10" placeholder="Numero de celular" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label" style="color: rgb(185, 185, 185);">Contraseña</label>
+                            <input class="input" minlength="6" id="contra" type="password" placeholder="Contraseña"
+                                required>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label" style="color: rgb(185, 185, 185);">Validar contraseña</label>
+                            <input class="input" minlength="6" id="contra2" type="password" onkeyup="matchPassword()"
+                                placeholder="Validar contraseña" required>
+                            <p style="display: none;" id="contraok" class="help is-success">Las contraseñas coinciden.
+                            </p>
+                            <p style="display: none;" id="contraokn" class="help is-danger">Las contraseñas no
+                                coinciden.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" style="color: rgb(185, 185, 185);">Email</label>
+                    <input class="input" id="email" type="email" placeholder="Email" required>
+                </div>
+                <br>
+                <div class="field has-text-centered">
+                    <div class="control">
+                        <button type="submit" class="button is-link">Crear cuenta</submit>
+                    </div>
+                </div>
+                <br>
+                <br>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Termina Seccion1 -->
+{% endblock %}

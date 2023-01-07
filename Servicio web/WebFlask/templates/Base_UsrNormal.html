@@ -1,0 +1,151 @@
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bulma.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/cards.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static',filename='img/icon.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static',filename='img/icon.png') }}" type="image/x-icon">
+    <!-- Material Design Iconic Font CSS -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/material-design-iconic-font.min1.css') }}">
+    <!-- MaterialDark CSS -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style1.css') }}">
+    <style>
+        .loader-wrapper-robot-move {
+            width: 100%;
+            height: 70vh;
+            background-color: #071e36;
+            position: relative;
+        }
+
+        .contentloaderRobotMove {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%)
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar has-shadow">
+        <div class="navbar-brand">
+            <a class="navbar-item">
+                <img src="{{ url_for('static',filename='img/logobear.png')}}" alt="Logo">
+            </a>
+            <a class="navbar-burger" id="burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </a>
+        </div>
+        <div id="nav-links" style="background-color: #041221;" class="navbar-menu">
+            <div id="a-href-links" class="navbar-end">
+                <a class="navbar-item">
+                    Bienvenido: {{nombrecito}}
+                </a>
+                <a href="{{url_for('inicio')}}" class="navbar-item">
+                    Cerrar sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="loader-wrapper-robot-move" style="width: 100%;">
+        <div class="contentloaderRobotMove">
+            <div class="column has-text-centered">
+                <h1 class="title" style="color: white;">Robot en movimiento favor de esperar </h1>
+            </div>
+            <progress class="progress is-medium is-primary " max="100">40%</progress>
+        </div>
+    </div>
+    <!-- Nav Lateral -->
+    <div class="columns" id="navLateral">
+        <aside class="column is-2 is-narrow-mobile is-fullheight section is-hidden-mobile">
+            <p class="menu-label is-hidden-touch">Usuario normal</p>
+            <ul class="menu-list">
+                <li>
+                    <a href="/envioReciboPaquetes" class="waves-effect waves-light"><i
+                            class="zmdi zmdi-navigation zmdi-hc-fw"></i> Enviar o recibir paquetes</a>
+                </li>
+                <li>
+                    <a href="/verBitacora" class="waves-effect waves-light"><i
+                            class="zmdi zmdi zmdi-folder-star-alt zmdi-hc-fw"></i> Bitácora del sistema </a>
+                </li>
+                <li>
+                    <a href="/verDatosCuenta" class="waves-effect waves-light"><i
+                            class="zmdi zmdi-settings zmdi-hc-fw"></i>
+                        Modificar cuenta</a>
+                </li>
+                <li>
+                    <a href="/deleteAccount" class="waves-effect waves-light"><i class="zmdi zmdi-close zmdi-hc-fw"></i>
+                        Eliminar cuenta</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="column content">
+            <!-- CONTENIDO -->
+            {% block contenido %}{% endblock %}
+            <!-- CONTENIDO -->
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>TT No. 2021-B013 "Modelado del Physarum Polycephalum con autómatas
+                        celulares para el enrutado de robots mensajeros"<br /> ESCOM - IPN </strong><br />
+                    Ramirez Olvera Guillermo<br />
+                    Sanchez Mendez Edmundo Josue
+                </p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        $(".loader-wrapper-robot-move").hide();
+        function removeSpacesandLeaveOne(huevo) {
+            var passC = ""
+            var letrasEliminadas = 0
+            var strArray = Array.from(huevo);
+            var strArrayC = Array.from(huevo);
+            for (var i = 0; i < strArray.length; ++i) {
+                if (strArray[i] == ' ' && passC == ' ') {
+                    strArrayC.splice(i - letrasEliminadas, 1);
+                    letrasEliminadas = letrasEliminadas + 1;
+                }
+                passC = strArray[i]
+            }
+            var arrayStrwCommas = strArrayC.toString();
+            var finalString = arrayStrwCommas.split(',').join('');
+            return finalString;
+        }
+        const burgerIcon = document.querySelector('#burger');
+        const navbarMenu = document.querySelector('#nav-links');
+        const allElements = document.getElementsByTagName('a');;
+        var aString = []
+        for (var idx = 0; idx < allElements.length; ++idx) {
+            if (allElements[idx].className == "waves-effect waves-light") {
+                var firstA = '<a href="' + allElements[idx].href.replace('http://127.0.0.1:5000', '');
+                var nTag = removeSpacesandLeaveOne(allElements[idx].innerText.replace(/(\r\n|\n|\r)/gm, ""));
+                var finalA = '" class="navbar-item">' + nTag + '</a>';
+                var allinone = firstA + finalA
+                aString.push(allinone)
+            }
+        }
+
+        burgerIcon.addEventListener('click', () => {
+            var div = document.getElementById('a-href-links');
+            for (var idx = 0; idx < aString.length; ++idx) {
+                div.insertAdjacentHTML('beforeend', aString[idx]);
+            }
+            navbarMenu.classList.toggle('is-active')
+        })
+
+    </script>
+</body>
+
+</html>

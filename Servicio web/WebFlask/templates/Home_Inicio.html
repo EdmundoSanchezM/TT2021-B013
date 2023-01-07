@@ -1,0 +1,36 @@
+{% extends "Base_Home.html" %}
+{% block title %}Pagina principal{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+	<div class="section">
+		<div class="column has-text-centered">
+			<h1 class="title" style="color: ghostwhite;">Envio de paquetes</h1>
+			<h1 class="subtitle" style="color: ghostwhite;">Pagina web para el envio de paquetes usando el Physarum
+				Polycephalum</h1><br>
+		</div>
+		<div class="columns is-centered">
+			<div class="column is-half">
+				<div class="card">
+					<div class="card-image">
+						<figure class="image is-square">
+							<img src="{{ url_for('static',filename='img/gifHome.gif')}}"
+								alt="GIF Physarum Polycephalum aplicado en el edificio de gobierno de la ESCOM" />
+						</figure>
+					</div>
+					<div class="card-content">
+						<div class="content">
+							Para iniciar a utilizar la herramienta inicie sesión o en su defecto cree un usuario y
+							espere a que
+							este sea validado.
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

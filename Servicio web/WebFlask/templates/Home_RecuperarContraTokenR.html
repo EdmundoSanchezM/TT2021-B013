@@ -1,0 +1,120 @@
+{% extends "Base_Home.html" %}
+{% block title %}Recuperar contraseña{% endblock %}
+
+{% block content %}
+<!-- Sweet Alert CSS -->
+<link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+<!-- Sweet Alert JS -->
+<script src="{{ url_for('static',filename='js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+<script>
+    function matchPassword() {
+        var pw1 = document.getElementById("contra").value;
+        var pw2 = document.getElementById("contra2").value;
+        if (pw2.length > 0) {
+            if (pw1 == pw2) {
+                document.getElementById("contraok").style.display = 'block';
+                document.getElementById("contraokn").style.display = 'none';
+            } else {
+                document.getElementById("contraokn").style.display = 'block';
+                document.getElementById("contraok").style.display = 'none';
+            }
+        }
+
+    }
+    function traeValores(formulario) {
+        var dataDic = {
+            pass: formulario.contra.value,
+            token : formulario.token.value
+        }
+        var data = JSON.stringify(dataDic, null, 2)
+        var http = new XMLHttpRequest();
+        var url = '/modificarContra';
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/json');
+        http.responseType = "json";
+        http.onreadystatechange = function () {
+            if (this.readyState == 4 && this.response[1] == 200) {
+                Swal.fire({
+                    title: "Bien",
+                    text: this.response[0]["mensaje"],
+                    confirmButtonText: 'Iniciar sesión',
+                    icon: "success"
+                }).then((result) => {
+                    location.href = "/login";
+                })
+            } else if (this.response[1] == 409) {
+                Swal.fire({
+                    text: this.response[0]["mensaje"],
+                    confirmButtonText: 'Ok',
+                    icon: "warning"
+                }).then((result) => {
+                    location.href = "/signup";
+                })
+            } else if (this.response[1] == 500) {
+                Swal.fire({
+                    title: "Error",
+                    text: this.response[0]["mensaje"],
+                    confirmButtonText: 'Ok',
+                    icon: "error"
+                }).then((result) => {
+                    location.href = "/signup";
+                })
+            }
+        };
+        http.send(data);
+        return false
+    }
+</script>
+<div class="container">
+    <div class="section">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <br>
+        <div class="column has-text-centered">
+            <h1 class="title" style="color: ghostwhite;">Recuperar contraseña</h1>
+        </div>
+        <div class="content" id="formulario">
+            <form id="recuperarContra" method="POST"
+                onsubmit="return traeValores(document.getElementById('recuperarContra'))">
+                {% for item in data %}
+                <input class="input" id="token" value="{{item.usrToken}}" type="hidden"   >
+                {% endfor%}
+                <div class="field">
+                    <label class="label" style="color: rgb(185, 185, 185);">Ingresa nueva contraseña</label>
+                    <input class="input" minlength="6" id="contra" type="password" placeholder="Contraseña" required>
+                </div>
+                <br>
+                <div class="field">
+                    <label class="label" style="color: rgb(185, 185, 185);">Validar contraseña</label>
+                    <input class="input" minlength="6" id="contra2" type="password" onkeyup="matchPassword()"
+                        placeholder="Validar contraseña" required>
+                    <p style="display: none;" id="contraok" class="help is-success">Las contraseñas coinciden.
+                    </p>
+                    <p style="display: none;" id="contraokn" class="help is-danger">Las contraseñas no
+                        coinciden.</p>
+                </div>
+                <br>
+                <div class="field has-text-centered">
+                    <div class="control">
+                        <button type="submit" class="button is-link">Cambiar contraseña</submit>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+</div>
+<!-- Termina Seccion1 -->
+{% endblock %}

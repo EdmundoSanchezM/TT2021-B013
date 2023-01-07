@@ -1,0 +1,162 @@
+{% extends "Base_UsrNormal.html" %}
+{% block title %}Envio y recibo de paquetes{% endblock %}
+
+{% block contenido %}
+<!-- Sweet Alert CSS -->
+<link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+<!-- Sweet Alert JS -->
+<script src="{{ url_for('static',filename='js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+
+<script>
+    function traeValoresnuevaUbicacion(formulario) {
+        $('#navLateral').hide();
+        $('.loader-wrapper-robot-move').show();
+        var dataDic = {
+            nombreNuevaUbic: formulario.ubicacionNueva.value,
+        }
+        var data = JSON.stringify(dataDic, null, 2)
+        var http = new XMLHttpRequest();
+        var url = '/moverRobotNuevoPunto';
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/json');
+        http.responseType = "json";
+        http.onprogress = function (event) {
+            $(".loader-wrapper-robot-move").fadeOut("slow")
+        };
+        http.onreadystatechange = function () {
+            if (this.readyState == 4 && this.response[1] == 200) {
+                $('#navLateral').fadeIn("slow");
+                if (this.response[0]["nuevaUbicacion"] == "False") {
+                    Swal.fire({
+                        title: "El robot esta en movimiento",
+                        icon: "info"
+                    }).then((result) => {
+                        window.location.reload();
+                    })
+                } else {
+                    Swal.fire({
+                        title: "El robot llego a la nueva ubicación inicial",
+                        icon: "info"
+                    }).then((result) => {
+                        window.location.reload();
+                    })
+                }
+            }
+        };
+        http.send(data);
+        return false
+    }
+    function traeValoresenvioPaquetes(formulario) {
+        $('#navLateral').hide();
+        $('.loader-wrapper-robot-move').show();
+        var dataDic = {
+            nombreNuevaUbic: formulario.ubicacionEntrega.value,
+            emailDestinatario: formulario.personaDestino.value,
+        }
+        var data = JSON.stringify(dataDic, null, 2)
+        var http = new XMLHttpRequest();
+        var url = '/envioPaquete';
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/json');
+        http.responseType = "json";
+        http.onprogress = function (event) {
+            $(".loader-wrapper-robot-move").fadeOut("slow")
+        };
+        http.onreadystatechange = function () {
+            if (this.readyState == 4 && this.response[1] == 200) {
+                $('#navLateral').fadeIn("slow");
+                if (this.response[0]["nuevaUbicacion"] == "False") {
+                    Swal.fire({
+                        title: "El robot esta en movimiento",
+                        icon: "info"
+                    }).then((result) => {
+                        window.location.reload();
+                    })
+                } else {
+                    Swal.fire({
+                        title: "El robot a llegado al destino",
+                        icon: "info"
+                    }).then((result) => {
+                        window.location.reload();
+                    })
+                }
+            }
+        };
+        http.send(data);
+        return false
+    }
+</script>
+<div class="container">
+    <div class="section">
+        <div class="column has-text-centered">
+            <h1 class="title">Envio y recibo de paquetes</h1>
+            <h3 class="subtitle ">Ubicación actual del robot: {{locacion}}</h3>
+        </div>
+        <div class="content">
+            <p><strong style="color: black;"> Si desea hacer un envió desde otra ubicación que no es la actual favor de
+                    elegir la ubicación donde
+                    se iniciara el envió y dar clic en el botón, en caso contrario, omitir esta parte.</strong> </p>
+            <form id="nuevaUbicacion" method="POST"
+                onsubmit="return traeValoresnuevaUbicacion(document.getElementById('nuevaUbicacion'))">
+                <div class="field">
+                    <label>Elegir nueva ubicación donde iniciara el envio</label><br>
+                    <div class="control">
+                        <div class="select">
+                            <select id="ubicacionNueva" {{desactivar}}>
+                                {% for ubicacionesDisponibles in ubicacionWOposR %}
+                                <option value="{{ ubicacionesDisponibles }}">{{ ubicacionesDisponibles }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field has-text-centered">
+                    <div class="control">
+                        <button type="submit" class="button is-link" {{desactivar}}>Mover robot a la nueva ubicación
+                            inicial</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="content">
+            <p><strong style="color: black;">Antes de enviar un paquete por favor de colocar el paquete en la caja del robot</strong> </p>
+            <form id="enviarPaquete" method="POST"
+                onsubmit="return traeValoresenvioPaquetes(document.getElementById('enviarPaquete'))">
+                <div class="field">
+                    <label>Elegir ubicación de entrega</label><br>
+                    <div class="control">
+                        <div class="select">
+                            <select id="ubicacionEntrega" {{desactivar}}>
+                                {% for ubicacionesDisponibles in ubicacionWOposR %}
+                                <option value="{{ ubicacionesDisponibles }}">{{ ubicacionesDisponibles }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Elegir el correo de la persona que recibira el paquete</label><br>
+                    <div class="control">
+                        <div class="select">
+                            <select id="personaDestino" {{desactivar}}>
+                                {% for persona in personas %}
+                                {% if persona[0] != correo %}
+                                <option value="{{persona[0]}}">{{ persona[0] }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field has-text-centered">
+                    <div class="control">
+                        <button type="submit" class="button is-link" {{desactivar}}> Enviar paquete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- CONTENIDO -->
+{% endblock %}

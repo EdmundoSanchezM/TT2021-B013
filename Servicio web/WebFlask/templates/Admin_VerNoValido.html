@@ -1,0 +1,181 @@
+{% extends "Base_Admin.html" %}
+{% block title %}Lista de cuentas no validadas{% endblock %}
+
+{% block contenido %}
+<!-- Sweet Alert CSS -->
+<link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+<!-- Sweet Alert JS -->
+<script src="{{ url_for('static',filename='js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+
+<script type="text/javascript">
+    function eliminarNoValido(formulario) {
+        Swal.fire({
+            title: "¿Desea eliminar esta cuenta no valida?",
+            text: "El usuario " + formulario.nombreUbC.value + " será borrado",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#DD6B5F",
+            confirmButtonColor: "#50C878",
+            confirmButtonText: "Si",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var dataDic = {
+                    email: formulario.emailbC.value,
+                }
+                var data = JSON.stringify(dataDic, null, 2)
+                var http = new XMLHttpRequest();
+                var url = '/borrarCuentaNoValida';
+                http.open('POST', url, true);
+                http.setRequestHeader('Content-type', 'application/json');
+                http.responseType = "json";
+                http.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.response[1] == 200) {
+                        Swal.fire({
+                            title: "Cuenta eliminada",
+                            text: this.response[0]["mensaje"],
+                            icon: "success"
+                        }).then((result) => {
+                            location.href = "/verCuentasNoValidadas";
+                        })
+                    } else if (this.response[1] == 409) {
+                        Swal.fire({
+                            title: "Error",
+                            text: this.response[0]["mensaje"],
+                            confirmButtonText: 'Ok',
+                            icon: "error"
+                        }).then((result) => {
+                            location.href = "/verCuentasNoValidadas";
+                        })
+                    } else if (this.response[1] == 500) {
+                        Swal.fire({
+                            title: "Error",
+                            text: this.response[0]["mensaje"],
+                            confirmButtonText: 'Ok',
+                            icon: "error"
+                        }).then((result) => {
+                            location.href = "/verCuentasNoValidadas";
+                        })
+                    }
+                };
+                http.send(data);
+                return false
+            } else { return false }
+        });
+        return false;
+    }
+
+    function validarCuenta(formulario) {
+        Swal.fire({
+            title: "¿Desea validar esta cuenta?",
+            text: "El usuario " + formulario.nombreU.value + " tendra su cuenta validada y podra usar el sistema",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#DD6B5F",
+            confirmButtonColor: "#50C878",
+            confirmButtonText: "Si",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var dataDic = {
+                    email: formulario.email.value,
+                }
+                var data = JSON.stringify(dataDic, null, 2)
+                var http = new XMLHttpRequest();
+                var url = '/validarCuenta';
+                http.open('POST', url, true);
+                http.setRequestHeader('Content-type', 'application/json');
+                http.responseType = "json";
+                http.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.response[1] == 200) {
+                        Swal.fire({
+                            title: "Cuenta validada",
+                            text: this.response[0]["mensaje"],
+                            icon: "success"
+                        }).then((result) => {
+                            location.href = "/verCuentasNoValidadas";
+                        })
+                    } else if (this.response[1] == 409) {
+                        Swal.fire({
+                            title: "Error",
+                            text: this.response[0]["mensaje"],
+                            confirmButtonText: 'Ok',
+                            icon: "error"
+                        }).then((result) => {
+                            location.href = "/verCuentasNoValidadas";
+                        })
+                    } else if (this.response[1] == 500) {
+                        Swal.fire({
+                            title: "Error",
+                            text: this.response[0]["mensaje"],
+                            confirmButtonText: 'Ok',
+                            icon: "error"
+                        }).then((result) => {
+                            location.href = "/verCuentasNoValidadas";
+                        })
+                    }
+                };
+                http.send(data);
+                return false
+            } else { return false }
+        });
+        return false;
+    }
+</script>
+<div class="container">
+    <div class="section">
+        <div class="column has-text-centered">
+            <h1 class="title">Lista de cuentas no validadas</h1>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <!-- <th data-field="Email">Email</th> -->
+                    <th data-field="Usuario">Nombre</th>
+                    <th data-field="Nombre">Apellido Materno</th>
+                    <th data-field="Apellido1">Apellido Paterno</th>
+                    <th data-field="Apellido2">Numero de celular</th>
+                    <th data-field="Administrador">Validar cuenta</th>
+                    <th data-field="Eliminar">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if filas != None %}
+                {% for fila in filas %}
+                <tr>
+                    <td>{{fila[1]}}</td>
+                    <td>{{fila[2]}}</td>
+                    <td>{{fila[3]}}</td>
+                    <td>{{fila[4]}}</td>
+                    <td>
+                        <form id="valC" name="valC" method="POST"
+                            onsubmit="return validarCuenta(document.getElementById('valC'))">
+                            <input type="hidden" name="email" id="email" value="{{fila[0]}}">
+                            <input type="hidden" name="nombreU" id="nombreU" value="{{fila[1]}}">
+                            <button class="button is-success" type="submit" name="enviar"
+                                id="enviar">&nbsp;&nbsp;&nbsp;&nbsp;<i
+                                    class="zmdi zmdi-star"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </button>
+                        </form>
+                    </td>
+                    <td>
+                        <form id="elim" name="elim" method="POST"
+                            onsubmit="return eliminarNoValido(document.getElementById('elim'))">
+                            <input type="hidden" name="emailbC" id="emailbC" value="{{fila[0]}}">
+                            <input type="hidden" name="nombreUbC" id="nombreUbC" value="{{fila[1]}}">
+                            <button class="button is-danger" type="submit" name="enviar" id="enviar">&nbsp;&nbsp;&nbsp;&nbsp;<i
+                                    class=" zmdi zmdi-delete"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- CONTENIDO -->
+{% endblock %}

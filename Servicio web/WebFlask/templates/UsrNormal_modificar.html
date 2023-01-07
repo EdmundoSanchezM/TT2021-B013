@@ -1,0 +1,197 @@
+{% extends "Base_UsrNormal.html" %}
+{% block title %}Modificar cuenta{% endblock %}
+
+{% block contenido %}
+<!-- Sweet Alert CSS -->
+<link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+<!-- Sweet Alert JS -->
+<script src="{{ url_for('static',filename='js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+
+<script type="text/javascript">
+    let passOk = 0
+    function validateNumbers(evt) {
+        var theEvent = evt || window.event;
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+            // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
+    function matchPassword() {
+        var pw1 = document.getElementById("contra").value;
+        var pw2 = document.getElementById("contra2").value;
+        if (pw1 == pw2) {
+            document.getElementById("contraok").style.display = 'block';
+            document.getElementById("contraokn").style.display = 'none';
+            passOk = 1
+        } else {
+            document.getElementById("contraokn").style.display = 'block';
+            document.getElementById("contraok").style.display = 'none';
+            passOk = -1
+        }
+    }
+    function modificaCuenta(form) {
+        Swal.fire({
+            title: "¿Desea realizar los cambios?",
+            text: "El usuario " + form.nombre.value + " será modificado\n",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#DD6B5F",
+            confirmButtonColor: "#50C878",
+            confirmButtonText: "Si",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (passOk == -1) {
+                    Swal.fire({
+                        title: "Las contraseñas no coinciden",
+                        icon: "warning",
+                        confirmButtonText: "Ok",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            return false;
+                        }
+                    })
+                } else {
+                    var dataDic = {
+                        psw: form.contra.value,
+                        cel: form.cel.value,
+                        ema: form.email.value
+                    }
+                    var data = JSON.stringify(dataDic, null, 2)
+                    var http = new XMLHttpRequest();
+                    var url = '/modificarCuenta';
+                    http.open('POST', url, true);
+                    http.setRequestHeader('Content-type', 'application/json');
+                    http.responseType = "json";
+                    http.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.response[1] == 200) {
+                            Swal.fire({
+                                title: "Cuenta modificada",
+                                text: this.response[0]["mensaje"],
+                                icon: "success"
+                            }).then((result) => {
+                                location.href = "/verDatosCuenta";
+                            })
+                        } else if (this.response[1] == 409) {
+                            Swal.fire({
+                                title: "Error",
+                                text: this.response[0]["mensaje"],
+                                confirmButtonText: 'Ok',
+                                icon: "error"
+                            }).then((result) => {
+                                location.href = "/verDatosCuenta";
+                            })
+                        } else if (this.response[1] == 500) {
+                            Swal.fire({
+                                title: "Error",
+                                text: this.response[0]["mensaje"],
+                                confirmButtonText: 'Ok',
+                                icon: "error"
+                            }).then((result) => {
+                                location.href = "/verDatosCuenta";
+                            })
+                        }
+                    };
+                    http.send(data);
+                    return false
+                }
+
+            } else { return false }
+        });
+        return false;
+    }
+</script>
+{% if filas != None %}
+{% for fila in filas %}
+<div class="container">
+    <div class="section">
+        <div class="column has-text-centered">
+            <h1 class="title">Modificar cuenta</h1>
+        </div>
+        <div class="content">
+            <form id="modCuenta" name="modCuenta" method="POST"
+                onsubmit="return modificaCuenta(document.getElementById('modCuenta'))">
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">Nombre(s)</label>
+                            <input class="input" disabled value="{{fila[1]}}" id="nombre" type="text"
+                                placeholder="Nombre(s)">
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">Apellido Paterno</label>
+                            <input class="input" disabled value="{{fila[2]}}" id="appaterno" type="text"
+                                placeholder="Apellido Paterno">
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">Apellido Materno</label>
+                            <input class="input" disabled value="{{fila[3]}}" id="apmaterno" type="text"
+                                placeholder="Apellido Materno">
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">Numero de celular</label>
+                            <input class="input" id="cel" value="{{fila[4]}}" onkeypress='validateNumbers(event)' 
+                            type="text" minlength="10" maxlength="10"  placeholder="Numero de celular" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">Contraseña (Si desea conservar la contraseña actual no llene este
+                                campo)</label>
+                            <input class="input" minlength="6" id="contra" type="password" placeholder="Contraseña">
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">Validar contraseña</label>
+                            <input class="input" minlength="6" id="contra2" type="password" onkeyup="matchPassword()"
+                                placeholder="Validar contraseña">
+                            <p style="display: none;" id="contraok" class="help is-success">Las contraseñas coinciden.
+                            </p>
+                            <p style="display: none;" id="contraokn" class="help is-danger">Las contraseñas no
+                                coinciden.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Email</label>
+                    <input class="input" disabled value="{{fila[0]}}" id="email" type="email" placeholder="Email"
+                        required>
+                </div>
+                <br>
+                <div class="field has-text-centered">
+                    <div class="control">
+                        <button class="button is-link" type="submit" name="enviar" id="enviar">Enviar
+                        </button>
+                    </div>
+                </div>
+                <br>
+                <br>
+            </form>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- CONTENIDO -->
+{% endblock %}

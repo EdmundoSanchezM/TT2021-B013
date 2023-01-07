@@ -1,0 +1,39 @@
+{% extends "Base_Home.html" %}
+{% block title %}Recuperar contraseña{% endblock %}
+
+{% block content %}
+<!-- Sweet Alert CSS -->
+<link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+<!-- Sweet Alert JS -->
+<script src="{{ url_for('static',filename='js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+<div class="container">
+    <div class="section">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="column has-text-centered">
+            <h1 class="title" style="color: ghostwhite;">¡Lo sentimos!</h1>
+            <h3 style="color: ghostwhite;"> El token que esta utilizando fue alterado y es incorrecto.<br> Si aún requiere recuperar su contraseña favor de volver a la opción de recuperar contraseña.</h3>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+</div>
+<!-- Termina Seccion1 -->
+{% endblock %}

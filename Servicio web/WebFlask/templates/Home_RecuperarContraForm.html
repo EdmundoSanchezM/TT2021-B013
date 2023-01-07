@@ -1,0 +1,182 @@
+{% extends "Base_Home.html" %}
+{% block title %}Recuperar contraseña{% endblock %}
+
+{% block content %}
+<!-- Sweet Alert CSS -->
+<link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+<!-- Sweet Alert JS -->
+<script src="{{ url_for('static',filename='js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+<style>
+    .loader-wrapper {
+        width: 100%;
+        height: 70vh;
+        top: 0;
+        left: 0;
+        background-color: #071e36;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loader {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        position: relative;
+        border: 4px solid #Fff;
+        animation: loader 2s infinite ease;
+    }
+
+    .loader-inner {
+        vertical-align: top;
+        display: inline-block;
+        width: 100%;
+        background-color: #fff;
+        animation: loader-inner 2s infinite ease-in;
+    }
+
+    @keyframes loader {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        25% {
+            transform: rotate(180deg);
+        }
+
+        50% {
+            transform: rotate(180deg);
+        }
+
+        75% {
+            transform: rotate(360deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes loader-inner {
+        0% {
+            height: 0%;
+        }
+
+        25% {
+            height: 0%;
+        }
+
+        50% {
+            height: 100%;
+        }
+
+        75% {
+            height: 100%;
+        }
+
+        100% {
+            height: 0%;
+        }
+    }
+</style>
+<script>
+    function traeValores(formulario) {
+        $('#formulario').hide();
+        $('.loader-wrapper').show();
+        var dataDic = {
+            email: formulario.email.value,
+        }
+        var data = JSON.stringify(dataDic, null, 2)
+        var http = new XMLHttpRequest();
+        var url = '/recuparContra';
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/json');
+        http.responseType = "json";
+        http.onprogress = function (event) {
+            $(".loader-wrapper").fadeOut("slow")
+        };
+        http.onreadystatechange = function () {
+            if (this.readyState == 4 && this.response[1] == 200) {
+                $('#mensaje').fadeIn("slow");
+            }
+        };
+        http.send(data);
+        return false
+    }
+</script>
+<div class="loader-wrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
+</div>
+<div class="container">
+
+    <div class="section" id="formulario">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="column has-text-centered">
+            <h1 class="title" style="color: ghostwhite;">Recuperar contraseña</h1>
+        </div>
+        <div class="content" id="formulario">
+            <form id="recuperarContra" method="POST"
+                onsubmit="return traeValores(document.getElementById('recuperarContra'))">
+                <div class="field">
+                    <label class="label" style="color: rgb(185, 185, 185);">Email</label>
+                    <input class="input" id="email" type="email" placeholder="Email" required>
+                </div>
+                <br>
+                <div class="field has-text-centered">
+                    <div class="control">
+                        <button type="submit" class="button is-link">Recuperar contraseña</submit>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+    <div class="section" id="mensaje">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="column has-text-centered">
+            <h1 class="title" style="color: ghostwhite;">Recuperar contraseña</h1>
+            <h5 style="color: ghostwhite;"> Hemos enviado a su correo las indicaciones para continuar con la
+                recuperación de tu contraseña.<br>
+                Recuerda revisar su bandeja de spam.</h5>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+</div>
+
+<script>
+    $(".loader-wrapper").hide();
+    $('#mensaje').hide();
+</script>
+<!-- Termina Seccion1 -->
+{% endblock %}

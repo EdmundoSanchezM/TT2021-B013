@@ -1,6 +1,6 @@
 # Robot
 ## Contenido:
-* Archivos del modelado de las piezas 3D utilizadas en el desarrollo del robot
+* Archivos del modelado de las piezas 3D utilizadas en el desarrollo del robot.
 * Algoritmo del seguimiento de rutas (Carpeta codigo).
 * Algoritmo de uso de sensores y re calcular ruta (Carpeta codigo).
 * Codigo de uso de giroscopio(Carpeta codigo).

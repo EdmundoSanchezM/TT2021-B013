@@ -1,0 +1,22 @@
+{% extends "Base_Admin.html" %}
+{% block title %}Ver cámara{% endblock %}
+
+{% block contenido %}
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+<!-- CONTENIDO -->
+<div class="container">
+    <div class="section">
+        <div class="column has-text-centered">
+            <h1 class="title">Video en directo del robot</h1>
+        </div>
+        <div class="content" style="height: 700px; ">
+            <!--Cambiar la ip cuando la aplicacion este en la rasp-->
+            <iframe style="width:100%; height: 1000px;"
+            src="http://148.204.56.179:8081/" frameborder="0" allowfullscreen></iframe>
+        </iframe>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENIDO -->
+{% endblock %}
