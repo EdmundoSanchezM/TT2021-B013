@@ -12,6 +12,5 @@ este comando pedira contraseña de super usuario. En caso de solo querer ejecuta
 ```
  make run
 ``` 
-.
 ## Advertencia:
 Tener instalado Python 3 como versión minima. Recomendable Python 3.9
