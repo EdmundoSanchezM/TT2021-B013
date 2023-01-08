@@ -12,5 +12,6 @@ este comando pedira contraseña de super usuario. En caso de solo querer ejecuta
 ```
  make run
 ``` 
+Los tres archivos deben de estar dentro de la carpeta Scripts para que funcionen correctamente.
 ## Advertencia:
 Tener instalado Python 3 como versión minima. Recomendable Python 3.9
