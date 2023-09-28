@@ -175,7 +175,7 @@ def Simulador (celulas,regla,vecindad,entro):
         try:
             aux,mins=load(filename,celulas)
         except:
-            print('No se selecciono un archivo')
+            print('No se seleccionó un archivo')
         
     def guardar():
         window.withdraw()
@@ -388,7 +388,7 @@ def Simulador (celulas,regla,vecindad,entro):
 
                 if event.key == pygame.K_g:
                     window.withdraw()
-                    txt = tkinter.simpledialog.askstring(title="Save",prompt="Ingresa el nombre de tu archivo, se le agregara la extencion y las celulas por lado")
+                    txt = tkinter.simpledialog.askstring(title="Save",prompt="Ingresa el nombre de tu archivo, se le agregará la extensión y las celdas por lado")
                     save(txt,gameState)
                     
     
@@ -430,7 +430,7 @@ def Simulador (celulas,regla,vecindad,entro):
         
         time.sleep(delay/100)
         #textos
-        texto= "Generacion: "+str(generacion)
+        texto= "Generación: "+str(generacion)
         label = myfont.render(texto, 1, (255,255,255))
         screen.blit(label, (17, 15))
         
