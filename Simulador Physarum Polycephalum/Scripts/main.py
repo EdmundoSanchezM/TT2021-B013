@@ -12,7 +12,7 @@ from tkinter import *
 def start():
     #------------------------------CREAR VENTANA---------------------------------
     root = tkinter.Tk()
-    root.wm_title("Automata del Physarum Polycephalum")
+    root.wm_title("Autómata del Physarum Polycephalum")
     framet = tkinter.Frame(root)
     frameVecindad = tkinter.Frame(root)
     frameMainInformacion = tkinter.Frame(root)
@@ -34,12 +34,12 @@ def start():
     def mensaje():
         mensaje="""
 1) Comportamiento normal
-2) Separacion de una celula en los repelentes
+2) Separación de una célula en los repelentes
         """
         tkinter.messagebox.showinfo(message=mensaje, title="Reglas")
         
     def mensajeEntro(): 
-        mensaje="""La grafica de la entropia puede tardar, no cerrar el programa """
+        mensaje="""La gráfica de la entropía puede tardar, no cerrar el programa"""
         tkinter.messagebox.showinfo(message=mensaje, title="Reglas")
         
     def infoNueva():
@@ -62,7 +62,7 @@ def start():
             regla=int(combo2.get()) 
             entro=combo3.get()
         except:
-            tkinter.messagebox.showinfo(message="Ingrese correctamente los datos", title="Validacion")
+            tkinter.messagebox.showinfo(message="Ingrese correctamente los datos", title="Validación")
             return
         
         if entro=='Si':
@@ -80,13 +80,13 @@ def start():
                     elif combo.get()=="Moore":
                         Simulador(celulas,regla,'moore',entro)
                     else:
-                        tkinter.messagebox.showinfo(message="Escoga una vecinadad", title="Validacion")
+                        tkinter.messagebox.showinfo(message="Elija una vecindad", title="Validación")
                 else:
-                    tkinter.messagebox.showinfo(message="No existe esa regla", title="Validacion")
+                    tkinter.messagebox.showinfo(message="No existe esa regla", title="Validación")
             else:
-                    tkinter.messagebox.showinfo(message="No se puede trabajar con esa cantidad de celulas", title="Validacion")
+                    tkinter.messagebox.showinfo(message="No se puede trabajar con esa cantidad de células", title="Validación")
         else:
-            tkinter.messagebox.showinfo(message="Seleccionar si desea entropia o no", title="Validacion")
+            tkinter.messagebox.showinfo(message="Seleccionar si desea entropía o no", title="Validación")
         
         if pasa and entro:
             print(entro)
@@ -97,7 +97,7 @@ def start():
         
     #------------------------------CREAR INTERFAZ---------------------------------
 
-    titulo = tkinter.Label(framet, text="Automata del Physarum Polycephalum",font=("times new roman", 24))
+    titulo = tkinter.Label(framet, text="Autómata del Physarum Polycephalum",font=("times new roman", 24))
     titulo.pack(side="top")
     
      #------------------------------VECINDAD---------------------------------
@@ -114,7 +114,7 @@ def start():
     tittleCondicionUsuario = tkinter.Label(frameMainInformacion, text = "Condiciones iniciales" ,font=("times new roman", 18))
     tittleCondicionUsuario.grid(row = 0, column = 0,columnspan=2)
 
-    tamanioEspacio = tkinter.Label(frameMainInformacion, text = "Numero de celdas por lado: " , font=("times new roman", 14))
+    tamanioEspacio = tkinter.Label(frameMainInformacion, text = "Número de celdas por lado: " , font=("times new roman", 14))
     tamanioEspacio.grid(row=1, column=0)
     entradaEspacio = tkinter.Entry(frameMainInformacion,font=("times new roman", 14), textvariable = tamEspacio)
     entradaEspacio.grid(row=1, column=1)
